@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sketch2Future: a sketch-to-image studio with transparent, explainable AI workflows.">
+  <title>Sketch2Future — Explainable AI Studio</title>
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</head>
+<body>
+  <div class="site-shell">
+    <header class="topbar">
+      <div class="brand-group">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none"><path d="M7 24.5 22.8 8.7a3.1 3.1 0 0 1 4.4 4.4L11.4 28.9 5 30l2-5.5Z" stroke="currentColor" stroke-width="2.1" stroke-linejoin="round"/><path d="m20.5 11.3 4.3 4.3" stroke="currentColor" stroke-width="2"/><path d="M7.5 4.5v8m-4-4h8M26 22v6m-3-3h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        </div>
+        <div><div class="brand-title">Sketch<span>2</span>Future<span class="brand-dot">.</span></div><div class="brand-subtitle">Explainable AI Studio</div></div>
+      </div>
+      <div class="topbar-right">
+        <span class="environment-pill"><span class="pulse-dot"></span><span id="environmentLabel">LOCAL DEMO</span></span>
+        <div class="status-chip" id="backendStatus" title="Local Flask server status"><span class="status-light"></span><span id="backendStatusText">Checking backend...</span></div>
+        <button class="icon-button history-trigger" type="button" id="historyButton" title="Recent creations" aria-label="Open recent creations">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5M12 7v5l3.5 2"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <div class="page-intro">
+      <div class="intro-copy">
+        <div class="eyebrow"><span class="eyebrow-rule"></span> IMAGINE · CREATE · UNDERSTAND</div>
+        <h1>Bring your <em>sketches</em> to life.</h1>
+        <p>Turn a drawing into a visual concept, then discover how the process works. Simple to create. Transparent to explore.</p>
+      </div>
+      <div class="intro-side">
+        <span class="intro-glyph" aria-hidden="true">✦</span>
+        <div class="intro-aside-heading">Built for curious creators</div>
+        <div class="intro-aside-caption">One studio. Three model approaches. Clear explanations.</div>
+      </div>
+    </div>
+
+    <div class="demo-banner" role="status">
+      <span class="banner-icon" aria-hidden="true">i</span>
+      <span id="backendBannerText"><strong>Sketch2Future · Phase 3.</strong> Use this local interface with the Kaggle GPU backend through ngrok. When connected, generated images come from the selected diffusion pipeline.</span>
+      <button type="button" id="dismissBanner" aria-label="Dismiss banner" title="Dismiss">×</button>
+    </div>
+
+    <main class="workspace" id="studio">
+      <!-- LEFT: creation controls -->
+      <section class="panel creation-panel" aria-labelledby="createTitle">
+        <div class="panel-topline">
+          <div>
+            <div class="overline">YOUR WORKSPACE</div>
+            <h2 id="createTitle">Create something new <span class="heading-spark">✳</span></h2>
+          </div>
+          <div class="stage-count">01 <span>/ 03</span></div>
+        </div>
+
+        <form id="generateForm" novalidate>
+          <div class="form-section">
+            <div class="section-title-row"><label class="section-heading" for="sketchFile"><span class="step-number">01</span> Add your sketch</label><span class="field-optional">PNG · JPG · WEBP</span></div>
+            <div class="input-toggle" role="group" aria-label="Sketch source">
+              <button class="input-tab active" id="uploadModeButton" type="button" aria-pressed="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.4"/><path d="m3 17 5-5 4 3 4-5 5 5"/></svg>
+                Upload
+              </button>
+              <button class="input-tab" id="drawModeButton" type="button" aria-pressed="false">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 20 4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20Z"/><path d="m14.5 7.5 3 3"/></svg>
+                Draw
+              </button>
+            </div>
+
+            <div id="uploadView">
+              <div class="dropzone" id="dropZone" tabindex="0" role="button" aria-label="Choose sketch or drop image here">
+                <input id="sketchFile" type="file" accept="image/png,image/jpeg,image/webp" hidden>
+                <div class="upload-empty" id="uploadEmpty">
+                  <div class="upload-illustration" aria-hidden="true">
+                    <svg viewBox="0 0 88 79" fill="none"><rect x="12" y="14" width="58" height="48" rx="9" fill="white" stroke="#D6DFEC" stroke-width="2"/><rect x="21" y="23" width="58" height="48" rx="9" fill="#EEF4FA" stroke="#BECFE0" stroke-width="2"/><path d="m29 57 13-14 11 10 11-16 9 12" stroke="#7C9CAF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="42" cy="34" r="4" fill="#9DB8CA"/><circle cx="66" cy="17" r="14" fill="#E6E7FF"/><path d="M66 10v14m-7-7h14" stroke="#6E69D9" stroke-width="2.2" stroke-linecap="round"/></svg>
+                  </div>
+                  <strong>Drop your sketch here</strong>
+                  <span>or <u>browse files</u> to upload</span>
+                  <small>Max 10 MB · Original drawings work best</small>
+                </div>
+                <div class="upload-preview hidden" id="uploadPreview">
+                  <img id="sketchPreviewImage" alt="Selected sketch preview">
+                  <div class="selected-file-footer"><span id="selectedFileName">sketch.png</span><span class="change-file">Change ↗</span></div>
+                </div>
+              </div>
+              <button type="button" class="subtle-link" id="sampleButton">↗ Try an example sketch</button>
+            </div>
+
+            <div id="drawView" class="hidden">
+              <div class="drawing-shell">
+                <canvas id="drawingCanvas" width="900" height="620" aria-label="Drawing canvas; use mouse, stylus or touch to draw"></canvas>
+                <div class="draw-toolbar">
+                  <button type="button" id="brushButton" class="draw-tool active" aria-label="Draw with pen" title="Pen">✎</button>
+                  <button type="button" id="eraserButton" class="draw-tool" aria-label="Use eraser" title="Eraser">⌫</button>
+                  <label class="brush-label" for="brushSize">Brush size</label>
+                  <input id="brushSize" type="range" min="2" max="30" step="1" value="5" aria-label="Brush size">
+                  <button type="button" id="clearCanvasButton" class="clear-drawing">Clear</button>
+                </div>
+              </div>
+              <p class="helper-text">Draw directly on the canvas using a mouse, finger, or stylus.</p>
+            </div>
+          </div>
+
+          <div class="form-section form-section-spaced">
+            <div class="section-title-row"><label class="section-heading" for="promptInput"><span class="step-number">02</span> Describe your vision</label><span class="field-optional">Optional</span></div>
+            <div class="textarea-wrap"><textarea id="promptInput" rows="4" maxlength="700" placeholder="E.g. A cozy cottage perched on a dramatic cliff, golden hour lighting, realistic stone textures..."></textarea><span id="promptCount" class="char-counter">0 / 700</span></div>
+            <div class="suggestion-row"><span class="suggestion-label">Try a style:</span><button type="button" class="suggestion-chip" data-style="photorealistic, natural lighting, highly detailed">Photorealistic</button><button type="button" class="suggestion-chip" data-style="cinematic lighting, atmospheric, rich textures">Cinematic</button><button type="button" class="suggestion-chip" data-style="soft watercolor illustration, delicate brushwork">Watercolor</button></div>
+          </div>
+
+          <div class="form-section form-section-spaced">
+            <div class="section-title-row"><span class="section-heading"><span class="step-number">03</span> Quality preset</span></div>
+            <div class="preset-grid" role="group" aria-label="Generation preset">
+              <button type="button" class="preset-card active" data-preset="standard" aria-pressed="true"><span class="preset-icon">◈</span><span class="preset-name">Standard</span><span class="preset-description">A balanced starting point</span><span class="preset-check" aria-hidden="true">✓</span></button>
+              <button type="button" class="preset-card" data-preset="detailed" aria-pressed="false"><span class="preset-icon">✧</span><span class="preset-name">Detailed</span><span class="preset-description">Explore SDXL settings</span><span class="preset-check" aria-hidden="true">✓</span></button>
+            </div>
+            <p class="helper-text">Presets control model settings, not guaranteed image quality.</p>
+          </div>
+
+          <div class="form-section form-section-spaced core-method">
+            <div class="section-title-row"><span class="section-heading"><span class="step-number">04</span> Choose your AI approach</span></div>
+            <p class="helper-text">Select the model and how the sketch structure should guide it.</p>
+              <div class="field"><label for="approachSelect">AI approach <span class="info-icon" title="Choose which model will run once Kaggle is connected">ⓘ</span></label><select id="approachSelect"><option value="a1">Approach 1 · SD 1.5 + ControlNet</option><option value="a2">Approach 2 · SD 1.5 + ControlNet + LoRA</option><option value="a3">Approach 3 · SDXL + ControlNet</option></select></div>
+              <div class="field"><label for="preprocessingSelect">Sketch preprocessing <span class="info-icon" title="Auto uses a heuristic to select edge or scribble guidance">ⓘ</span></label><select id="preprocessingSelect"><option value="auto">Auto (recommended)</option><option value="canny">Canny / edge guidance</option><option value="scribble">Scribble / stroke guidance</option><option value="lineart">Lineart / learned outlines (A1 + A2)</option></select><small id="preprocessingHint">Auto selects Canny, Scribble or Lineart for SD 1.5; SDXL selects Canny or Scribble.</small></div>
+          </div>
+
+          <details class="advanced-wrap" id="advancedSettings">
+            <summary><span class="advanced-summary-icon">⚙</span><span><strong>Advanced settings</strong><small>Fine-tune your generation</small></span><svg class="advanced-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></summary>
+            <div class="advanced-content">
+              <div class="field"><label for="negativePrompt">Avoid in image (negative prompt)</label><textarea id="negativePrompt" rows="2" maxlength="500" placeholder="Optional — default: low quality, blurry, distorted geometry, duplicate objects, unrealistic image" ></textarea></div>
+              <div class="settings-row"><div class="field"><label for="seedInput">Random seed <span class="info-icon" title="Use -1 for a random seed; 42 is a reproducible starting point">ⓘ</span></label><input id="seedInput" type="number" min="-1" max="2147483647" step="1" value="42"></div><div class="field"><label for="stepsInput">Inference steps</label><input id="stepsInput" type="number" min="10" max="60" value="28"></div></div>
+              <div class="field range-field"><label for="cfgInput">Prompt guidance <output id="cfgOutput">7.5</output></label><input type="range" id="cfgInput" min="1" max="15" step="0.5" value="7.5"><small>How strongly generation is guided by your description.</small></div>
+              <div class="field range-field"><label for="controlInput">Sketch influence <output id="controlOutput">0.90</output></label><input type="range" id="controlInput" min="0" max="2" step="0.05" value="0.9"><small>How strongly ControlNet follows the sketch.</small></div>
+              <div class="field range-field hidden" id="loraField"><label for="loraInput">LoRA influence <output id="loraOutput">0.70</output></label><input type="range" id="loraInput" min="0" max="1" step="0.05" value="0.7"></div>
+            </div>
+          </details>
+
+          <button type="submit" id="generateButton" class="generate-button"><span class="generate-button-symbol">✧</span><span>Generate image</span><span class="generate-button-arrow">↗</span></button>
+          <div class="generate-note"><span class="mini-dot"></span> Phase 3: when Kaggle is connected, the selected diffusion pipeline generates the image.</div>
+        </form>
+      </section>
+
+      <!-- RIGHT: generated images + explanations -->
+      <section class="panel results-panel" aria-labelledby="resultsTitle">
+        <div class="results-heading"><div><div class="overline">CREATION SPACE</div><h2 id="resultsTitle">Your visual workspace</h2></div><div class="results-heading-right"><span class="result-mode-pill" id="resultModePill">NO IMAGE YET</span></div></div>
+        <div class="result-tabs" role="tablist" aria-label="Result views">
+          <button type="button" id="tab-result" class="result-tab active" role="tab" aria-selected="true" aria-controls="panel-result" data-tab="result"><span>◉</span> Result</button>
+          <button type="button" id="tab-explain" class="result-tab" role="tab" aria-selected="false" aria-controls="panel-explain" data-tab="explain"><span>✦</span> Explain</button>
+          <button type="button" id="tab-compare" class="result-tab" role="tab" aria-selected="false" aria-controls="panel-compare" data-tab="compare"><span>▥</span> Compare</button>
+          <button type="button" id="tab-lab" class="result-tab" role="tab" aria-selected="false" aria-controls="panel-lab" data-tab="lab"><span>⚗</span> LoRA Lab</button>
+        </div>
+
+        <div id="panel-result" class="tab-panel" role="tabpanel" aria-labelledby="tab-result">
+          <div id="emptyState" class="result-empty">
+            <div class="empty-orbit orbit-one"></div><div class="empty-orbit orbit-two"></div>
+            <div class="empty-art" aria-hidden="true"><svg viewBox="0 0 270 218" fill="none"><rect x="39" y="28" width="191" height="160" rx="17" fill="white" stroke="#DDE3EF" stroke-width="2"/><rect x="51" y="40" width="167" height="136" rx="11" fill="#F3F6FC"/><circle cx="175" cy="82" r="18" fill="#E2DFFF"/><path d="M57 158 102 108l38 37 31-39 41 42v19H57v-9Z" fill="#CDDDE7"/><path d="m58 158 42-47 34 33 37-44 42 48" stroke="#8097BB" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 45c12-6 15-11 21-24m-4 34 12-9M221 175l19 18m-6-36 11-4" stroke="#B0A8EB" stroke-width="2.2" stroke-linecap="round"/><path d="m133 17 4 8 8 4-8 4-4 8-4-8-8-4 8-4 4-8Z" fill="#C7C4F9"/><path d="m240 60 3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6Z" fill="#A2C9D7"/><path d="m29 192 3 6 6 3-6 3-3 6-3-6-6-3 6-3 3-6Z" fill="#A8C5E8"/></svg></div>
+            <h3>Your next idea starts here.</h3><p>Upload a sketch or create one on the canvas. Your result will appear here when you generate an image.</p>
+            <div class="empty-steps"><span><b>1</b> Add a sketch</span><span class="step-arrow">→</span><span><b>2</b> Describe it</span><span class="step-arrow">→</span><span><b>3</b> Create</span></div>
+          </div>
+          <div id="loadingState" class="result-loading hidden" role="status" aria-live="polite"><div class="spinner"></div><h3>Generating image, please wait...</h3><p id="generationLoadingMessage">The selected model is generating on Kaggle.</p></div>
+          <div id="generatedState" class="generated-state hidden">
+            <div class="main-image-wrap"><img id="generatedImage" src="" alt="Generated image based on your uploaded sketch"><div class="demo-watermark" id="mainResultWatermark">AI GENERATED</div></div>
+            <div class="generated-meta-row"><div><span class="result-label">CURRENT RESULT</span><h3 id="generatedTitle">Your generated result</h3><p id="generatedSubtitle">AI inference result from the selected approach.</p></div><a id="downloadImageButton" class="secondary-button" href="#" download="sketch2future_result.png"><span>↓</span> Download</a></div>
+            <div class="result-info-banner"><span>ⓘ</span><span id="resultInfoText">This panel reports whether the image was generated by the selected diffusion model and how the sketch was processed.</span></div>
+            <div class="result-actions"><button type="button" class="outline-button" id="regenerateButton">↻ &nbsp; Generate again</button><button type="button" class="outline-button" id="viewExplanationButton">✧ &nbsp; Understand this result</button></div>
+          </div>
+        </div>
+
+        <div id="panel-explain" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-explain">
+          <div id="explainEmpty" class="inner-empty"><div class="inner-empty-icon">✦</div><h3>Curious how it works?</h3><p>Generate an image first. This space will show the original sketch, structural guidance, and the main settings used.</p><button type="button" class="outline-button go-create">Back to create</button></div>
+          <div id="explainContent" class="hidden">
+            <div class="content-heading"><div><span class="overline">BEHIND THE SCENES</span><h3>Understand your result</h3><p>A transparent record of each step in the process.</p></div><span class="transparency-pill">VERIFIABLE STEPS</span></div>
+            <div class="flow-grid"><div class="flow-card"><div class="flow-image"><img id="explainSourceImage" alt="Original uploaded sketch"></div><div class="flow-label"><span class="flow-step">01</span><span>Original sketch</span></div></div><div class="flow-card"><div class="flow-image"><img id="explainConditionImage" alt="Structural guidance image"></div><div class="flow-label"><span class="flow-step">02</span><span>Guidance image</span></div></div><div class="flow-card"><div class="flow-image"><img id="explainOutputImage" alt="Generated image"></div><div class="flow-label"><span class="flow-step">03</span><span>Generated result</span></div></div></div>
+            <div class="explain-feature"><div class="explain-feature-icon">✧</div><div><h4>What happened to your sketch?</h4><p id="explainSummary"></p></div></div>
+            <div class="explanation-list">
+              <div class="explanation-item"><span class="explanation-bullet"></span><div><h4>Why this preprocessing?</h4><p id="explainPreprocessing"></p></div></div>
+              <div class="explanation-item"><span class="explanation-bullet"></span><div><h4>How was your prompt used?</h4><p id="explainPrompt"></p></div></div>
+              <div class="explanation-item"><span class="explanation-bullet"></span><div><h4>Which model was selected?</h4><p id="explainModel"></p></div></div>
+              <div class="explanation-item"><span class="explanation-bullet"></span><div><h4>What did the input analysis measure?</h4><div class="xai-metrics" id="xaiMetrics"></div><p>These are image measurements and heuristic rules, not confidence scores or guaranteed explanations of model internals.</p></div></div>
+            </div>
+            <div class="parameter-card"><div class="parameter-card-heading"><h4>Generation record</h4><a id="exportMetadata" class="small-link" href="#" download>Export JSON ↗</a></div><div class="parameter-grid" id="parameterGrid"></div></div>
+            <p class="explain-disclaimer" id="explainLimitations"></p>
+          </div>
+        </div>
+
+        <div id="panel-compare" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-compare">
+          <div class="content-heading"><div><span class="overline">EXPLORE ALTERNATIVES</span><h3>Compare approaches</h3><p>Run the same sketch through all three approaches and inspect the outputs side by side.</p></div></div>
+          <div class="comparison-alert"><span>ⓘ</span> The comparison tab runs three real generations sequentially on Kaggle, so it can take significantly longer than a single image.</div>
+          <div id="compareEmpty" class="compare-empty"><div class="compare-graphic">▥</div><h4>See the difference side by side</h4><p>Send this sketch to Kaggle and receive three generated outputs, one per approach.</p><button type="button" id="compareButton" class="compare-cta">Compare all approaches <span>↗</span></button></div>
+          <div id="compareLoading" class="result-loading hidden"><div class="spinner"></div><h3>Comparing all three Generation approaches...</h3><p>Kaggle generates each model result sequentially. This may take several minutes.</p></div>
+          <div id="compareResults" class="compare-results hidden"><div class="comparison-grid" id="comparisonGrid"></div><div class="comparison-footer"><span id="comparisonNotice">Each run records its own preprocessing method and settings.</span><button type="button" id="rerunCompare" class="outline-button">↻ Run again</button></div></div>
+        </div>
+
+
+        <div id="panel-lab" class="tab-panel hidden" role="tabpanel" aria-labelledby="tab-lab">
+          <div class="content-heading"><div><span class="overline">RESEARCH &amp; EVALUATION</span><h3>LoRA Evaluation Lab</h3><p>Isolate LoRA's contribution with controlled SD 1.5 experiments.</p></div><span class="transparency-pill">4 RUNS</span></div>
+          <div class="lab-intro"><strong>A</strong> Text only &nbsp;→&nbsp; <strong>B</strong> Text + LoRA<br>
+            <strong>C</strong> Text + ControlNet &nbsp;→&nbsp; <strong>D</strong> Text + ControlNet + LoRA
+            <p>All four use the same prompt, seed, steps and dimensions. C and D also share the same conditioning image.</p>
+          </div>
+          <div id="labEmpty" class="compare-empty"><div class="compare-graphic">⚗</div><h4>Test whether your LoRA changes the output</h4><p>Requires the `.safetensors` file configured in Kaggle. Four real GPU runs are generated sequentially.</p><button id="labButton" class="compare-cta" type="button">Run LoRA experiment <span>↗</span></button></div>
+          <div id="labLoading" class="result-loading hidden"><div class="spinner"></div><h3>Running the LoRA evaluation...</h3><p>Four models/configurations are executed sequentially. This is more intensive than a single generation.</p></div>
+          <div id="labResults" class="hidden"><div id="labGrid" class="lab-grid"></div><div class="lab-differences" id="labDifferences"></div><p class="lab-disclaimer" id="labNotice">Pixel difference shows whether an image changed, not whether it improved.</p><button id="labRerun" class="outline-button" type="button">↻ Run experiment again</button></div>
+        </div>
+        <div class="results-footer"><div><span class="footer-sparkle">✳</span> <strong>Why transparency matters</strong></div><p>The Explain tab reports actual preprocessing choices, model IDs and settings returned from Kaggle. Heuristic explanations do not reveal the model's internal reasoning.</p></div>
+      </section>
+    </main>
+    <footer class="site-footer"><span>© Sketch2Future · Master's AI project</span><span>Crafted for clarity, curiosity and responsible experimentation.</span></footer>
+  </div>
+
+  <div class="drawer-backdrop hidden" id="drawerBackdrop"></div>
+  <aside id="historyDrawer" class="history-drawer" aria-label="Recent creations" aria-hidden="true"><div class="drawer-head"><div><span class="overline">YOUR JOURNEY</span><h3>Recent creations</h3></div><button class="icon-button" type="button" id="closeHistory" aria-label="Close recent creations">×</button></div><p class="drawer-description">Saved locally in this project folder. Generated images and processing metadata are stored on this computer.</p><div id="historyList" class="history-list"></div><button type="button" id="clearHistory" class="clear-history-button">Clear local history</button></aside>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
