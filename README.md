@@ -57,7 +57,7 @@ Open **http://127.0.0.1:5000** in your browser. You should see **Kaggle API conn
 
 A developer-only preview mode is available by setting `SKETCH2FUTURE_BACKEND=mock` in `.env` and restarting local Flask. Mock is only a visual placeholder and does **not** run diffusion or LoRA; LoRA Lab explicitly rejects mock mode.
 
-## 3 — Use the interface
+## Use the interface
 
 - **Create:** Upload or draw a sketch; add prompt/optional negative prompt. Select an approach and preprocessing mode under **Advanced settings**. Auto chooses Canny/Scribble/Lineart for A1/A2; Auto chooses Canny/Scribble for A3. Lineart is disabled for A3.
 - **Result:** Save your generated image. The loading message names the actual selected approach rather than always referring to SDXL.
