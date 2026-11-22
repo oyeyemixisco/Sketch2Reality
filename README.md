@@ -1,4 +1,4 @@
-# Sketch2Future — Explainable AI Studio
+# Sketch2Future — with Explainable AI Feature
 
 **Runnable local Flask interface + Kaggle GPU inference + ngrok.** Verified Image generation notebook-model settings, transparent execution metadata and an optional four-run LoRA experiment. GPU and model downloads are required for real generation.
 
