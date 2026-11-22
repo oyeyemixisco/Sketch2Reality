@@ -28,7 +28,7 @@ Local Flask saves PNGs / metadata → browser Result / Explain / Compare / LoRA 
 6. Generate a 24 radmon varchar on Kaggle to uses as  **`KAGGLE_API_KEY`** (secret).  **`KAGGLE_API_URL`** (HTTPS ngrok address). Leave the Kaggle kernel running during use.
 7. The `/health` cell confirms the tunnel and reports `gpu_available`, `lora_available`, and `busy`. This is a **connectivity check, not a completed image generation**.
 
-## 2 — Start the local Flask web app
+## Start the local Flask web app
 
 ```bash
 # activate environment in terminal
