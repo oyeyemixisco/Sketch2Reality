@@ -2,6 +2,9 @@
 
 **Runnable local Flask interface + Kaggle GPU inference + ngrok.** Verified Image generation notebook-model settings, transparent execution metadata and an optional four-run LoRA experiment. GPU and model downloads are required for real generation.
 
+<img width="3584" height="2240" alt="image" src="https://github.com/user-attachments/assets/25632a5e-5474-41a4-acf4-2619377c5f84" />
+
+
 ## Architecture
 
 ```text
